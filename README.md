@@ -21,6 +21,8 @@
               minday:最小日期（可填）
               maxDay:最大日期（可填）
               HandleDatepicker: 日期选择后的回调函数（必填）
+
+              ![image](1.png)
               
           ｝
           
@@ -29,6 +31,8 @@
         
               "<AreaSelection  v-on:HandleDatepicker="HandleDatepicker"/>" 
               HandleDatepicker: 日期选择后的回调函数（必填）
+
+              ![image](2.png)
               
           ｝
       
