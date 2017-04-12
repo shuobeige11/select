@@ -80,8 +80,7 @@ export default class _touch {
     let event = window.event || event
     let target = event.target
     if (target.nodeName !== "A" || target.nodeName !== "INPUT") {
-      let touching = event.touches[0],
-          len = this.subElement.length - 1,
+      let len = this.subElement.length - 1,
           sum,
           endMove
       sum = endMove = 0
