@@ -19,16 +19,15 @@ export default class _touch {
   }
 
   init () {
-    document.body.addEventListener("touchmove", (e) => {
-        e.preventDefault()
-        e.stopPropagation()
-    }, false)
+    // document.body.addEventListener("touchmove", (e) => {
+    //     e.preventDefault()
+    //     e.stopPropagation()
+    // }, false)
     let endMove = 0,
         sum = 0;
     setTimeout(() => {
       this.subElement = this.element.querySelectorAll(this.subElement)
       this.elHeight = Math.ceil(this.subElement[0].clientHeight)
-      
       for (let i = 0; i < this.pos; i++) {
         sum += this.elHeight
       }
@@ -92,7 +91,6 @@ export default class _touch {
         for (let i = 0; i < this.countSrceen; i++) {
           sum += this.elHeight
         }
-        this.element.setAttribute('data-pos', this.countSrceen)
         endMove = 0 - sum
         this.element.style.cssText = "-webkit-transform: translateY(" + (endMove) + "px)"
         this.translateY = endMove

@@ -1,6 +1,6 @@
 <template>
   <div class="alert">
-     <section class="modal-mask" ref="mask" v-if="value.length" :style="'display:' + (!showSelect ? 'none' : 'block')">
+     <section :class="'modal-mask' + ( hidden ? ' modal-hide' : '' )" ref="mask" >
         <header class="modal-header">
             <header class="heading" v-text="title">弹出层</header>
             <span class="close" @click="HandleClick">完成</span>
@@ -30,56 +30,48 @@ export default {
       type: String,
       default: ''
     },
-    showSelect: {
+    hidden: {
       type: Boolean,
       default: true
+    },
+    comPos: {
+      type: Number,
+      default: 0
     }
   },
 
-  data () {
-    return {
-      pos: 0
-    }
-  },
-
-  mounted () {
-    if (!this.value.length) return
-    if (this.value.length > 0) {
-        let box = this.$refs['box']
-        new _touch({
-            element: box,
-            subElement: 'dd',
-            active: 'active',
-            pos: this.pos
-        })
-    }
-  },
-  
   updated () {
     if (!this.value.length) return
     if (this.value.length > 0) {
         let box = this.$refs['box']
+        let pos = box.querySelectorAll('dd')
+
+        for (let i = 0; i < pos.length; i++) {
+          let className = pos[i].setAttribute('class', '')
+        }
+
         new _touch({
             element: box,
             subElement: 'dd',
             active: 'active',
-            pos: this.pos
+            pos: this.comPos
         })
     }
   },
-
+  
   methods: {
     HandleClick() {
-      let value = this.$refs['box'].querySelector('.active').innerText
+      
+      this.values = this.$refs['box'].querySelector('.active').innerText
       let pos = this.$refs['box'].querySelectorAll('dd')
+
       for (let i = 0; i < pos.length; i++) {
           let className = pos[i].getAttribute('class')
           if (className == 'active') {
               this.pos = i
           }
       }
-      this.$store.dispatch('selectHide')
-      this.$emit('HandleClick', value)
+      this.$emit('HandleClick', { value: this.values, pos: this.pos })
     }
   }
 }

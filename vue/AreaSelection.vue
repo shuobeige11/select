@@ -143,7 +143,7 @@ export default {
       let dists = this.$refs['dists'].querySelector('.active').innerText
       this.values = province + city + dists
       this.shows = false
-      this.$emit('HandleDatepicker', this.values)
+      this.$emit('HandleAreaSelection', this.values)
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="alert">
-     <section class="value" v-text="values" @click="HandleClick1"></section>
+     <section class="value"  @click="HandleClick1"></section>
      
      <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
         <header class="modal-header">
@@ -49,7 +49,8 @@ export default {
       yearElement: null,
       monthElement: null,
       dayElement: null,
-      values: '不限',
+      values: '',
+      val: null,      
       flag: 0,
       space: {
         year: 0,
@@ -87,7 +88,7 @@ export default {
       this.flag = 3
       this.max = '2050-12-31'
       this.min = '1980-01-01'
-      this.values = value
+      this.val = value
       return
      }
 
@@ -113,26 +114,26 @@ export default {
      let space1 = !min ? '' : (+new Date(min)) - nowDay
 
      if ( Math.ceil(max.split('/')[0]) == Math.ceil(min.split('/')[0])) {
-       this.values = this.minDay
+       this.val = this.values = this.minDay
        this.flag = 4
        return
      }
 
      if (space && space < 0) {
-       this.values = this.maxDay
+       this.val = this.values = this.maxDay
        this.flag = 1
        return
      }
 
      if(space1 && space1 > 0) {
-       this.values = this.minDay
+       this.val = this.values = this.minDay
        this.flag = 2
        return
      } 
     
      if ((space >= 0 && space1 <= 0) || (space >= 0 && !space1) || (!space && !space1 <= 0)) {
        this.flag = 3
-       this.values = value
+       this.val =this.values = value
        return
      }
   },
@@ -211,7 +212,7 @@ export default {
 
     HandleClick1() {
       this.shows = true
-      this.init(this.values)
+      this.init(this.val)
       this.yearElement = this.$refs['year']
       this.monthElement = this.$refs['month']
       this.dayElement = this.$refs['day']

@@ -72,4 +72,15 @@
     border-top: 1px solid #c6c6c6;
     border-bottom: 1px solid #c6c6c6
   }
+  
+}
+
+.value {
+  width:100%;
+  height:toRem(20px)
+}
+
+.modal-hide {
+  height: 0;
+  overflow: hidden
 }

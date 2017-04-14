@@ -25,22 +25,12 @@
 ​      日期选择：
 
 ​        ｛
-
+              minday:最小日期（可填）
+              maxDay:最大日期（可填）
+              HandleDatepicker: 日期选择后的回调函数（必填）
 ​              <Datepicker :minDay= 2016-01-01 :maxDay=2018-01-01" v-on:HandleDatepicker=HandleDatepicker/>
 
-​              
-
-​              minday:最小日期（可填）
-
-​              maxDay:最大日期（可填）
-
-​              HandleDatepicker: 日期选择后的回调函数（必填）
-
-​              
-
-​              
-
-​             ![image](1.png)
+​              ​             ![image](1.png)
 
 ​              
 
@@ -52,11 +42,10 @@
 
 ​        ｛
 
-​        
+    			HandleDatepicker: 日期选择后的回调函数（必填）
 
 ​              <AreaSelection  v-on:HandleDatepicker=HandleDatepicker"/>
 
-​              HandleDatepicker: 日期选择后的回调函数（必填）
 
 ​              ![image](2.png)
 
@@ -64,14 +53,45 @@
 
 ​          ｝
 
-​      
+​      ComboBox：
+    value:下拉框列表
+    title：下拉框名称
+    comPos：当前选中项
+    comChange：完成回调
+    hidden：显示与关闭
+​	 <ComboBox 
+
+​			 :value="comList" 
+
+​      			 :title="comItem"
+
+​      			 :comPos="comPos" 
+
+​      			 v-on:HandleClick="comChange" 
+
+​      			 :hidden="hidden" />
+
+​	
 
 ​    ｝
 
-​        
+![image](3.png)    
 
+```
  注：组件css基于750宽度，计算rem; 基于es6编写，需babel
+ 
+ 修复方法：内容不需在组件内填充，可在自己组件中定义填充内容及样式，通过事件拉起当前组件，
+ 在ComboBox组件下，多个select，通过事件调用单个组件视图
+ 例：
+ <section class="values" v-text="activeTypeValue" @click="HandleComboShow()"></section>
+ 
+ HandleComboShow() {
+    this.hidden = false
+    this.comPos = this.comPos1
+    this.comList = this.screenList1
+    this.comChange = this.HandleChange1
+    this.comItem = '适用范围'
+ }
+```
 
-​        
-
-​       
+​	 
