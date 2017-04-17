@@ -19,10 +19,6 @@ export default class _touch {
   }
 
   init () {
-    // document.body.addEventListener("touchmove", (e) => {
-    //     e.preventDefault()
-    //     e.stopPropagation()
-    // }, false)
     let endMove = 0,
         sum = 0;
     setTimeout(() => {

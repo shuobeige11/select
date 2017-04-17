@@ -138,6 +138,15 @@ export default {
      }
   },
 
+  mounted() {
+    document.addEventListener("click", (e) => {
+      let el = e.target.nodeName
+      if (el === 'HTML') {
+          this.shows = false
+      }
+    }, false)
+  },
+  
   methods: {
     init(value) {
        let year,
@@ -224,9 +233,6 @@ export default {
         pos: this.pos.year,
         fn: () => {
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
-          this.$refs['month'].querySelector('.active').setAttribute('class', '')
-          this.$refs['day'].querySelector('.active').setAttribute('class', '')
-
          
           if (year == this.mins.year) {
             this.creatMonth(this.min, year, 0)
@@ -264,7 +270,6 @@ export default {
         fn: () => {
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
           let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
-          this.$refs['day'].querySelector('.active').setAttribute('class', '')
 
           if(year == this.mins.year && month == this.mins.month) {
             this.creatDay(this.min, month, year, 1)
@@ -359,6 +364,21 @@ export default {
       let day = this.$refs['day'].querySelector('.active').innerText
       this.values = year + '-' + (Math.ceil(month) > 9 ? month : '0' + month) + '-' + (Math.ceil(day) > 9 ? day : '0' + day)
       this.shows = false
+      let box1 = this.$refs['year']
+      let pos1 = box1.querySelectorAll('dd')
+      let box2 = this.$refs['month']
+      let pos2 = box2.querySelectorAll('dd')
+      let box3 = this.$refs['day']
+      let pos3 = box3.querySelectorAll('dd')
+      for (let i = 0; i < pos1.length; i++) {
+        pos1[i].setAttribute('class', '')
+      }
+      for (let i = 0; i < pos2.length; i++) {
+        pos2[i].setAttribute('class', '')
+      }
+      for (let i = 0; i < pos3.length; i++) {
+        pos3[i].setAttribute('class', '')
+      }
       this.$emit('HandleDatepicker', this.values)
     }
   }

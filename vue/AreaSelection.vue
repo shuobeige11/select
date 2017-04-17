@@ -51,6 +51,12 @@ export default {
   },
 
   mounted () {
+    document.addEventListener("click", (e) => {
+      let el = e.target.nodeName
+      if (el === 'HTML') {
+          this.shows = false
+      }
+    }, false)
     this.province = provs
     this.prov_city = citys[provs[0].value]
     this.prov_dist = dists[this.prov_city[0].value]
@@ -84,8 +90,6 @@ export default {
         pos: this.pos.prov,
         fn: () => {
           let city = this.provElement.querySelector('.active').getAttribute('data-value')
-          this.cityElement.querySelector('.active').setAttribute('class', '')
-          this.distElement.querySelector('.active').setAttribute('class', '')
 
           let provCode = city.substr(0,3)
           let dist = provCode + '100'
@@ -143,6 +147,22 @@ export default {
       let dists = this.$refs['dists'].querySelector('.active').innerText
       this.values = province + city + dists
       this.shows = false
+
+      let box1 = this.$refs['province']
+      let pos1 = box1.querySelectorAll('dd')
+      let box2 = this.$refs['city']
+      let pos2 = box2.querySelectorAll('dd')
+      let box3 = this.$refs['dists']
+      let pos3 = box3.querySelectorAll('dd')
+      for (let i = 0; i < pos1.length; i++) {
+        pos1[i].setAttribute('class', '')
+      }
+      for (let i = 0; i < pos2.length; i++) {
+        pos2[i].setAttribute('class', '')
+      }
+      for (let i = 0; i < pos3.length; i++) {
+        pos3[i].setAttribute('class', '')
+      }
       this.$emit('HandleAreaSelection', this.values)
     }
   }

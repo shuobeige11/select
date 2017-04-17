@@ -41,6 +41,7 @@ export default {
   },
 
   updated () {
+
     if (!this.value.length) return
     if (this.value.length > 0) {
         let box = this.$refs['box']
