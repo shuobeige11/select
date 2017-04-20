@@ -69,13 +69,13 @@ export default {
       this.cityElement = this.$refs['city']
       this.distElement = this.$refs['dists']
       if (this.provElement.querySelector('.active')) {
-        this.pos.prov = this.provElement.getAttribute('data-pos') 
+        this.pos.prov = this.provElement.getAttribute('data-pos') || 0
       }
       if (this.cityElement.querySelector('.active')) {
-        this.pos.city = this.cityElement.getAttribute('data-pos')
+        this.pos.city = this.cityElement.getAttribute('data-pos') || 0
       }
       if (this.distElement.querySelector('.active')) {
-        this.pos.dist = this.distElement.getAttribute('data-pos')
+        this.pos.dist = this.distElement.getAttribute('data-pos') || 0
       }
 
 
@@ -110,7 +110,9 @@ export default {
           this.prov_dist = dists[dist]
           this.pos.dist = 0
           this.pos.city = 0
-
+          this.provElement.setAttribute('data-pos', '0')
+          this.cityElement.setAttribute('data-pos', '0')
+          this.distElement.setAttribute('data-pos', '0')
           /*new _touch({
             element: this.cityElement,
             subElement: 'dd',
