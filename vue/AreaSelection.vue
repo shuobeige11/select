@@ -90,6 +90,19 @@ export default {
         pos: this.pos.prov,
         fn: () => {
           let city = this.provElement.querySelector('.active').getAttribute('data-value')
+          this.cityElement.style.cssText = "-webkit-transform: translateY(0px)"
+          this.distElement.style.cssText = "-webkit-transform: translateY(0px)"
+          let el1 = this.cityElement.querySelectorAll('dd')
+          let el2 = this.distElement.querySelectorAll('dd')
+          for (let i = 0; i < el1.length; i++) {
+            el1[i].setAttribute('class', '')
+          }
+          for (let i = 0; i < el2.length; i++) {
+            el2[i].setAttribute('class', '')
+          }
+
+          el1[0].setAttribute('class', 'active')
+          el2[0].setAttribute('class', 'active')
 
           let provCode = city.substr(0,3)
           let dist = provCode + '100'
@@ -98,7 +111,7 @@ export default {
           this.pos.dist = 0
           this.pos.city = 0
 
-          new _touch({
+          /*new _touch({
             element: this.cityElement,
             subElement: 'dd',
             active: 'active',
@@ -110,7 +123,7 @@ export default {
             subElement: 'dd',
             active: 'active',
             pos: 0
-          })
+          })*/
         }
        })
 
@@ -121,15 +134,22 @@ export default {
         pos: this.pos.city, 
         fn: () => {
            let dist = this.cityElement.querySelector('.active').getAttribute('data-value')
-           this.distElement.querySelector('.active').setAttribute('class', '')
+           this.distElement.style.cssText = "-webkit-transform: translateY(0px)"
+           let el2 = this.distElement.querySelectorAll('dd')
+           for (let i = 0; i < el2.length; i++) {
+            el2[i].setAttribute('class', '')
+           }
+
+           el2[0].setAttribute('class', 'active')
+
            this.prov_dist = dists[dist]
            this.pos.dist = 0
-           new _touch({
+           /*new _touch({
              element: this.distElement,
              subElement: 'dd',
              active: 'active',
              pos: 0
-          })
+          })*/
         }
        })
 
@@ -148,21 +168,6 @@ export default {
       this.values = province + city + dists
       this.shows = false
 
-      let box1 = this.$refs['province']
-      let pos1 = box1.querySelectorAll('dd')
-      let box2 = this.$refs['city']
-      let pos2 = box2.querySelectorAll('dd')
-      let box3 = this.$refs['dists']
-      let pos3 = box3.querySelectorAll('dd')
-      for (let i = 0; i < pos1.length; i++) {
-        pos1[i].setAttribute('class', '')
-      }
-      for (let i = 0; i < pos2.length; i++) {
-        pos2[i].setAttribute('class', '')
-      }
-      for (let i = 0; i < pos3.length; i++) {
-        pos3[i].setAttribute('class', '')
-      }
       this.$emit('HandleAreaSelection', this.values)
     }
   }

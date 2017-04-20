@@ -233,30 +233,30 @@ export default {
         pos: this.pos.year,
         fn: () => {
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
-         
+          let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
+          let dd = Math.ceil(this.$refs['day'].querySelector('.active').clientHeight)
+          let sum = 0
           if (year == this.mins.year) {
             this.creatMonth(this.min, year, 0)
           } else if(year == this.maxs.year) {
             this.creatMonth(this.max, year, 1)
           } else {
-            this.month = 0
             this.day = 0
-            this.space.month = 12 - this.month
-            let day = timers(year, this.month)
+            let day = timers(year, month)
             this.space.day = day - this.day
-            new _touch({
-              element: this.monthElement,
-              subElement: 'dd',
-              active: 'active',
-              pos: 0
-            })
             
-            new _touch({
-              element: this.dayElement,
-              subElement: 'dd',
-              active: 'active',
-              pos: 0
-            })
+
+            for (let i = 0; i < this.space.day - 1; i++) {
+              sum += dd
+            }
+            
+            let n = this.dayElement.style.transform
+            n = n.match(/\d+/g)[0]
+            if (n && Math.ceil(n) > sum) {
+              this.dayElement.querySelectorAll('dd')[this.space.day - 1].setAttribute('class', 'active')
+              this.dayElement.style.cssText = "-webkit-transform: translateY(" + Math.ceil(0 - sum) + "px)"
+            }
+
           }
         }
       })
@@ -270,26 +270,23 @@ export default {
         fn: () => {
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
           let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
-
-          if(year == this.mins.year && month == this.mins.month) {
-            this.creatDay(this.min, month, year, 1)
-            return
-          }
-          if(year == this.maxs.year && month == this.maxs.month) {
-            this.creatDay(this.max, month, year, 0)
-            return
-          }
-
+          let dd = Math.ceil(this.$refs['day'].querySelector('.active').clientHeight)
+          let sum = 0
+          
           this.day = 0
           let day = timers(year, month)
           this.space.day = day - this.day
-
-          new _touch({
-            element: this.dayElement,
-            subElement: 'dd',
-            active: 'active',
-            pos: 0
-          })
+          
+          for (let i = 0; i < this.space.day - 1; i++) {
+            sum += dd
+          }
+          
+          let n = this.dayElement.style.transform
+          n = n.match(/\d+/g)[0]
+          if (n && Math.ceil(n) > sum) {
+            this.dayElement.querySelectorAll('dd')[this.space.day - 1].setAttribute('class', 'active')
+            this.dayElement.style.cssText = "-webkit-transform: translateY(" + Math.ceil(0 - sum) + "px)"
+          }
         }
         
       })
@@ -303,35 +300,42 @@ export default {
 
     },
     creatMonth (value, year, flag) {
+      let years = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
+      let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
+      let dd =  Math.ceil(this.$refs['month'].querySelector('.active').clientHeight)
+      let sum = 0
+      let plus = 0
+      let day = 0
+      let el = this.monthElement.querySelectorAll('dd')
       this.month = Math.ceil(value.split('-')[1]) - 1
       this.day = Math.ceil(value.split('-')[2]) - 1
+      if(year == this.maxs.year || year == this.mins.year) {
+        this.day = 0
+      }
+
+      for (let i = 0; i < el.length; i++) {
+        el[i].setAttribute('class', '')
+      }
       if (!flag) {
         this.space.month = 12 - this.month
+        plus = month - this.month - 1
+        for (let i = 0; i < plus; i++) {
+          sum += dd
+        }
+        
+        el[plus].setAttribute('class', 'active')
+        this.monthElement.style.cssText = "-webkit-transform: translateY("+ (0 - sum) +"px)"
+        day = timers(year, month)
       } else {
         this.space.month = this.month + 1
         this.month = 0
+        el[0].setAttribute('class', 'active')
+        this.monthElement.style.cssText = "-webkit-transform: translateY(0px)"
+        day = timers(year, this.month + 1)
       }
 
-      if(year == this.maxs.year) {
-        this.day = 0
-      }
-      
-      let day = timers(year, this.month)
       this.space.day = day - this.day
 
-      new _touch({
-        element: this.monthElement,
-        subElement: 'dd',
-        active: 'active',
-        pos: 0
-      })
-      
-      new _touch({
-        element: this.dayElement,
-        subElement: 'dd',
-        active: 'active',
-        pos: 0
-      })
     },
 
     creatDay(value, month, year, flag) {
@@ -343,13 +347,6 @@ export default {
         this.space.day = this.day + 1
         this.day = 0
       }
-
-      new _touch({
-        element: this.dayElement,
-        subElement: 'dd',
-        active: 'active',
-        pos: 0
-      })
     },
 
     times() {
@@ -364,21 +361,6 @@ export default {
       let day = this.$refs['day'].querySelector('.active').innerText
       this.values = year + '-' + (Math.ceil(month) > 9 ? month : '0' + month) + '-' + (Math.ceil(day) > 9 ? day : '0' + day)
       this.shows = false
-      let box1 = this.$refs['year']
-      let pos1 = box1.querySelectorAll('dd')
-      let box2 = this.$refs['month']
-      let pos2 = box2.querySelectorAll('dd')
-      let box3 = this.$refs['day']
-      let pos3 = box3.querySelectorAll('dd')
-      for (let i = 0; i < pos1.length; i++) {
-        pos1[i].setAttribute('class', '')
-      }
-      for (let i = 0; i < pos2.length; i++) {
-        pos2[i].setAttribute('class', '')
-      }
-      for (let i = 0; i < pos3.length; i++) {
-        pos3[i].setAttribute('class', '')
-      }
       this.$emit('HandleDatepicker', this.values)
     }
   }

@@ -3,7 +3,8 @@ import animation from './animation'
 export default class _touch {
   constructor (el) {
     this.element = el.element
-    this.subElement = el.subElement
+    this.sub = el.subElement
+    this.subElement = null
     this.active = el.active
     this.fn = el.fn || ''
     this.pos = el.pos || 0
@@ -15,29 +16,41 @@ export default class _touch {
     this.moveY = 0 // touchmove 事件实际移动距离
     this.elHeight = 0 // 移动元素的高度
     this.posStart = 0
+    this.handleTouchStart = this.handleTouchStart.bind(this)
+    this.handleTouchMove = this.handleTouchMove.bind(this)
+    this.handleTouchEnd = this.handleTouchEnd.bind(this)
+
     this.init()
   }
 
   init () {
+    this.element.removeEventListener('touchstart',this.handleTouchStart, false)
+    this.element.removeEventListener('touchmove', this.handleTouchMove, false)
+    this.element.removeEventListener('touchend', this.handleTouchEnd, false)
+    let box = this.element.querySelectorAll('dd')
+    for (let i = 0; i < box.length; i++) {
+      box[i].setAttribute('class', '')
+    }
     let endMove = 0,
         sum = 0;
     setTimeout(() => {
-      this.subElement = this.element.querySelectorAll(this.subElement)
-      this.elHeight = Math.ceil(this.subElement[0].clientHeight)
+      let subElement = this.element.querySelectorAll(this.sub)
+      this.elHeight = Math.ceil(subElement[0].clientHeight)
       for (let i = 0; i < this.pos; i++) {
         sum += this.elHeight
       }
       sum = 0 - sum
       this.element.style.cssText = "-webkit-transform: translateY(" + sum + "px)"
       this.translateY = sum
-      this.subElement[this.pos].setAttribute('class', 'active')
+      subElement[this.pos].setAttribute('class', 'active')
     }, 1)
-    this.element.addEventListener('touchstart',() => this.handleTouchStart(), false)
-    this.element.addEventListener('touchmove', () => this.handleTouchMove(), false)
-    this.element.addEventListener('touchend', () => this.handleTouchEnd(), false)
+    this.element.addEventListener('touchstart',this.handleTouchStart, false)
+    this.element.addEventListener('touchmove', this.handleTouchMove, false)
+    this.element.addEventListener('touchend', this.handleTouchEnd, false)
   }
 
   handleTouchStart () {
+    this.subElement = this.element.querySelectorAll(this.sub)
     let event = window.event || event
     let target = event.target
     this.flag = null;
@@ -82,6 +95,7 @@ export default class _touch {
       
       if (len > 0) {
         this.countSrceen = 0 - Math.ceil(this.moveY / this.elHeight)
+
         if (this.countSrceen < 0) this.countSrceen = 0
         if (this.countSrceen > len) this.countSrceen = len - 1
         for (let i = 0; i < this.countSrceen; i++) {
@@ -95,9 +109,7 @@ export default class _touch {
           if (i != this.countSrceen) this.subElement[i].setAttribute('class', '')
         }
         if (typeof this.fn == 'function') {
-          setTimeout(() => {
-            this.fn()
-          }, 120)
+          this.fn()
         }
       } else {
          this.element.style.cssText = "-webkit-transform: translateY(0px)"
