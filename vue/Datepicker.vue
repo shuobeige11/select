@@ -1,7 +1,7 @@
 <template>
   <div class="alert">
      <section class="value"  @click="HandleClick1"></section>
-     
+     <section :class="'modal' + ( !shows ? ' modal-hide' : '' )">
      <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
         <header class="modal-header">
             <header class="heading">日历选择</header>
@@ -25,6 +25,7 @@
             </div>
             <section class="borders"> </section>
         </section>
+     </section>
      </section>
   </div>
 </template>
@@ -140,8 +141,8 @@ export default {
 
   mounted() {
     document.addEventListener("click", (e) => {
-      let el = e.target.nodeName
-      if (el === 'HTML') {
+      let el = e.target.getAttribute('class')
+      if (el === 'modal') {
           this.shows = false
       }
     }, false)

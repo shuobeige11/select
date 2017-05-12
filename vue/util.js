@@ -114,6 +114,8 @@ export default class _touch {
       } else {
          this.element.style.cssText = "-webkit-transform: translateY(0px)"
       }
+
+      this.element.setAttribute('data-pos', this.countSrceen)
       this.curY = null
       this.startY = null
       this.moveY = null
