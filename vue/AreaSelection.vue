@@ -8,17 +8,17 @@
             <span class="close" @click="HandleClick">完成</span>
         </header>
         <section class="modal-body">
-            <div class="box">
+            <div class="box" ref="province1">
               <dl class="modal-body-con" ref="province">
                   <dd v-for="n in province" v-text="n.text" :data-value="n.value"></dd>
               </dl>
             </div>
-            <div class="box">
+            <div class="box" ref="city1">
               <dl class="modal-body-con" ref="city">
                   <dd v-for="n in prov_city" v-text="n.text" :data-value="n.value"></dd>
               </dl>
             </div>
-            <div class="box">
+            <div class="box" ref="dists1">
               <dl class="modal-body-con" ref="dists">
                   <dd v-for="n in prov_dist" v-text="n.text" :data-value="n.value"></dd>
               </dl>
@@ -68,6 +68,9 @@ export default {
       this.provElement = this.$refs['province']
       this.cityElement = this.$refs['city']
       this.distElement = this.$refs['dists']
+      this.provElement1 = this.$refs['province1']
+      this.cityElement1 = this.$refs['city1']
+      this.distElement1 = this.$refs['dists1']
       if (this.provElement.querySelector('.active')) {
         this.pos.prov = this.provElement.getAttribute('data-pos') || 0
       }
@@ -84,14 +87,18 @@ export default {
       this.prov_dist = dists[this.prov_city[this.pos.city].value]
 
       new _touch({
+        parElement: this.provElement1,
         element: this.provElement,
         subElement: 'dd',
         active: 'active',
         pos: this.pos.prov,
-        fn: () => {
+        fn: (scroll) => {
           let city = this.provElement.querySelector('.active').getAttribute('data-value')
-          this.cityElement.style.cssText = "-webkit-transform: translateY(0px)"
-          this.distElement.style.cssText = "-webkit-transform: translateY(0px)"
+          console.log(1)
+          setTimeout(() => {
+            this.cityElement.style['WebkitTransform'] = 'translate3d(0px, 0px, 0) scale(1)'
+            this.distElement.style['WebkitTransform'] = "translate3d(0px, 0px, 0) scale(1)"
+          }, 120)
           let el1 = this.cityElement.querySelectorAll('dd')
           let el2 = this.distElement.querySelectorAll('dd')
           for (let i = 0; i < el1.length; i++) {
@@ -100,7 +107,7 @@ export default {
           for (let i = 0; i < el2.length; i++) {
             el2[i].setAttribute('class', '')
           }
-
+          console.log(el2[0])
           el1[0].setAttribute('class', 'active')
           el2[0].setAttribute('class', 'active')
 
@@ -130,13 +137,16 @@ export default {
        })
 
       new _touch({
+        parElement: this.cityElement1,
         element: this.cityElement,
         subElement: 'dd',
         active: 'active',
         pos: this.pos.city, 
         fn: () => {
            let dist = this.cityElement.querySelector('.active').getAttribute('data-value')
-           this.distElement.style.cssText = "-webkit-transform: translateY(0px)"
+           setTimeout(() => {
+              this.distElement.style['WebkitTransform'] = "translate3d(0px, 0px, 0px) scale(1);"
+           }, 120)
            let el2 = this.distElement.querySelectorAll('dd')
            for (let i = 0; i < el2.length; i++) {
             el2[i].setAttribute('class', '')
@@ -156,6 +166,7 @@ export default {
        })
 
       new _touch({
+        parElement: this.distElement1,
         element: this.distElement,
         subElement: 'dd',
         active: 'active',

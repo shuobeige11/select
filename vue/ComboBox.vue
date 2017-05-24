@@ -7,7 +7,7 @@
                 <span class="close" @click="HandleClick">完成</span>
             </header>
             <section class="modal-body">
-                <div class="box">
+                <div class="box" ref="parent">
                   <dl class="modal-body-con" ref="box">
                       <dd v-for="n of value" v-text='n'></dd>
                   </dl>
@@ -47,6 +47,7 @@ export default {
     if (!this.value.length) return
     if (this.value.length > 0) {
         let box = this.$refs['box']
+        let parent = this.$refs['parent']
         let pos = box.querySelectorAll('dd')
 
         for (let i = 0; i < pos.length; i++) {
@@ -54,6 +55,7 @@ export default {
         }
 
         new _touch({
+            parElement: parent,
             element: box,
             subElement: 'dd',
             active: 'active',
