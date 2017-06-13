@@ -1,40 +1,61 @@
 <template>
   <div class="alert">
      <section class="value" v-text="values" @click="HandleClick1"></section>
-     
-     <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
-        <header class="modal-header">
-            <header class="heading">地区选择</header>
-            <span class="close" @click="HandleClick">完成</span>
-        </header>
-        <section class="modal-body">
-            <div class="box" ref="province1">
-              <dl class="modal-body-con" ref="province">
-                  <dd v-for="n in province" v-text="n.text" :data-value="n.value"></dd>
-              </dl>
-            </div>
-            <div class="box" ref="city1">
-              <dl class="modal-body-con" ref="city">
-                  <dd v-for="n in prov_city" v-text="n.text" :data-value="n.value"></dd>
-              </dl>
-            </div>
-            <div class="box" ref="dists1">
-              <dl class="modal-body-con" ref="dists">
-                  <dd v-for="n in prov_dist" v-text="n.text" :data-value="n.value"></dd>
-              </dl>
-            </div>
-            <section class="borders"> </section>
+     <section :class="'modal' + ( !shows ? ' modal-hide' : '' )">
+        <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
+            <header class="modal-header">
+                <header class="heading">地区选择</header>
+                <span class="close" @click="HandleClick">完成</span>
+            </header>
+            <section class="modal-body">
+                <div class="box" ref="province1">
+                  <dl class="modal-body-con" ref="province">
+                      <dd v-for="n in province" v-text="n.text" :data-value="n.value"></dd>
+                  </dl>
+                </div>
+                <div class="box" ref="city1">
+                  <dl class="modal-body-con" ref="city">
+                      <dd v-for="n in prov_city" v-text="n.text" :data-value="n.value"></dd>
+                  </dl>
+                </div>
+                <div class="box" ref="dists1">
+                  <dl class="modal-body-con" ref="dists">
+                      <dd v-for="n in prov_dist" v-text="n.text" :data-value="n.value"></dd>
+                  </dl>
+                </div>
+                <section class="borders"> </section>
+            </section>
         </section>
-     </section>
+    </section>
   </div>
 </template>
 
 <script>
 import _touch from './util'
 import timers from './timers'
-import { provs, citys, dists } from './city'
+
 
 export default {
+  props: {
+    provs: {
+      type: Array,
+      default() {
+        return []
+      }
+    },
+    citys: {
+      type: Object,
+      default() {
+        return {}
+      }
+    },
+    dists: {
+      type: Object,
+      default() {
+        return {}
+      }
+    }
+  },
   data () {
     return {
       values: '请输入地址',
@@ -52,14 +73,18 @@ export default {
 
   mounted () {
     document.addEventListener("click", (e) => {
-      let el = e.target.nodeName
-      if (el === 'HTML') {
+      let el = e.target.getAttribute('class')
+      if (el === 'modal') {
           this.shows = false
       }
     }, false)
-    this.province = provs
-    this.prov_city = citys[provs[0].value]
-    this.prov_dist = dists[this.prov_city[0].value]
+  },
+  watch: {
+    provs() {
+      this.province = this.provs
+      this.prov_city = this.citys[this.provs[0].value]
+      this.prov_dist = this.dists[this.prov_city[0].value]
+    }
   },
 
   methods: {
@@ -82,9 +107,9 @@ export default {
       }
 
 
-      this.province = provs
-      this.prov_city = citys[provs[this.pos.prov].value]
-      this.prov_dist = dists[this.prov_city[this.pos.city].value]
+      this.province = this.provs
+      this.prov_city = this.citys[this.provs[this.pos.prov].value]
+      this.prov_dist = this.dists[this.prov_city[this.pos.city].value]
 
       new _touch({
         parElement: this.provElement1,
@@ -94,11 +119,12 @@ export default {
         pos: this.pos.prov,
         fn: (scroll) => {
           let city = this.provElement.querySelector('.active').getAttribute('data-value')
-          console.log(1)
+          
           setTimeout(() => {
             this.cityElement.style['WebkitTransform'] = 'translate3d(0px, 0px, 0) scale(1)'
             this.distElement.style['WebkitTransform'] = "translate3d(0px, 0px, 0) scale(1)"
           }, 120)
+
           let el1 = this.cityElement.querySelectorAll('dd')
           let el2 = this.distElement.querySelectorAll('dd')
           for (let i = 0; i < el1.length; i++) {
@@ -107,14 +133,14 @@ export default {
           for (let i = 0; i < el2.length; i++) {
             el2[i].setAttribute('class', '')
           }
-          console.log(el2[0])
+          
           el1[0].setAttribute('class', 'active')
           el2[0].setAttribute('class', 'active')
 
           let provCode = city.substr(0,3)
           let dist = provCode + '100'
-          this.prov_city = citys[city]
-          this.prov_dist = dists[dist]
+          this.prov_city = this.citys[city]
+          this.prov_dist = this.dists[dist]
           this.pos.dist = 0
           this.pos.city = 0
           this.provElement.setAttribute('data-pos', '0')
@@ -154,7 +180,7 @@ export default {
 
            el2[0].setAttribute('class', 'active')
 
-           this.prov_dist = dists[dist]
+           this.prov_dist = this.dists[dist]
            this.pos.dist = 0
            /*new _touch({
              element: this.distElement,
@@ -178,10 +204,19 @@ export default {
       let province = this.$refs['province'].querySelector('.active').innerText
       let city = this.$refs['city'].querySelector('.active').innerText
       let dists = this.$refs['dists'].querySelector('.active').innerText
+      let provCode = this.$refs['province'].querySelector('.active').getAttribute('data-value')
+      let cityCode = this.$refs['city'].querySelector('.active').getAttribute('data-value')
+      let distsCode = this.$refs['dists'].querySelector('.active').getAttribute('data-value')
       this.values = province + city + dists
+      this.code = {
+        provCode: provCode,
+        cityCode: cityCode,
+        distsCode: distsCode,
+        value: this.values
+      }
       this.shows = false
 
-      this.$emit('HandleAreaSelection', this.values)
+      this.$emit('HandleChangeArea', this.code)
     }
   }
 }

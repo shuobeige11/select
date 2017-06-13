@@ -27,7 +27,8 @@ export default class _touch {
     let _zscroller$scroller$g = this.scroller.getValues(),
         top = _zscroller$scroller$g.top
     let subElement = this.element.querySelectorAll(this.sub)
-    let t = Math.floor(top/this.elHeight)
+    let n = (top/this.elHeight).toFixed(1)
+    let t = Math.round(top/this.elHeight)
     if (t < 0) {
       t = 0
     } else if (t > subElement.length - 1) {
