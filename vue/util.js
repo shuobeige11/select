@@ -13,17 +13,19 @@ export default class _touch {
     this.handleTouchMove = this.handleTouchMove.bind(this)
     this.handleTouchEnd = this.handleTouchEnd.bind(this)
     this.scroller = null
-
+    this.flag = false
     this.init()
   }
 
   reflow() {
-     this.scroller.setDimensions(this.parent.clientWidth, this.parent.clientHeight, this.element.offsetWidth, this.element.offsetHeight);
+     this.scroller.setDimensions(this.parent.clientWidth, this.parent.clientHeight, this.element.offsetWidth, this.element.offsetHeight)
      let rect = this.parent.getBoundingClientRect();
-     this.scroller.setPosition(rect.left+ this.parent.clientLeft, rect.top+ this.parent.clientTop);
+     this.scroller.setPosition(rect.left + this.parent.clientLeft, rect.top + this.parent.clientTop);
   }
 
   scrollingComplete() {
+    this.flag = false
+    let box = this.element.querySelectorAll('dd') 
     let _zscroller$scroller$g = this.scroller.getValues(),
         top = _zscroller$scroller$g.top
     let subElement = this.element.querySelectorAll(this.sub)
@@ -36,24 +38,23 @@ export default class _touch {
     }
     let tops = t * this.elHeight
     setTimeout(() => {
-      subElement[t].setAttribute('class', this.active)
-      this.scroller.scrollTo(0, tops, 0, undefined, this.fn && this.fn(this.scroller))
-    },210)
+      for (let i = 0; i < box.length; i++) {
+        box[i].setAttribute('class', '')
+      }
+      this.scroller.scrollTo(0, tops, 1, undefined, this.fn && this.fn(this.scroller, subElement[t]))
+    }, 30)
   }
   
   init () {
-    let box = this.element.querySelectorAll('dd')
-    for (let i = 0; i < box.length; i++) {
-      box[i].setAttribute('class', '')
-    }
+    
     let endMove = 0,
-        sum = 0;
-    setTimeout(() => {
-      
+        sum = 0
+    
+    setTimeout(() => {  
       let subElement = this.element.querySelectorAll(this.sub)
       this.elHeight = Math.ceil(subElement[0].clientHeight)
       //this.element.style['height'] = this.element.clientHeight + (4 * this.elHeight) + 'px'
-      this.element.style.cssText ='padding: ' + (2 * this.elHeight) + 'px ' + '0 ' + (4 * this.elHeight) + 'px ' + '0'
+      this.element.style.cssText ='padding: ' + this.elHeight + 'px ' + '0 ' + (4 * this.elHeight) + 'px ' + '0'
       //this.element.style['paddingBottom'] =  (2 * this.elHeight) + 'px'
       for (let i = 0; i < this.pos; i++) {
         sum += this.elHeight
@@ -63,13 +64,13 @@ export default class _touch {
       this.translateY = sum
       let _this = this
       this.scroller = new Scroller(function(left, top, zoom) {
-        _this.element.style['WebkitTransform'] = 'translate3d(0px, '+ (0 - top) +'px, 0) scale(1)';
+        _this.element.style['WebkitTransform'] = 'translate3d(0px, '+ (0 - top) +'px, 0) scale(1)'
       }, {
         scrollingX: false,
         paging: false,
         penetrationDeceleration: .1,
         minVelocityToKeepDecelerating: 0.5,
-        scrollingComplete: () => { this.scrollingComplete() }
+        scrollingComplete: () => { if (this.flag) { this.scrollingComplete() }}
       });
 
       this.reflow()
@@ -77,8 +78,8 @@ export default class _touch {
           this.scroller.scrollTo(0, sum)
       }
       subElement[this.pos].setAttribute('class', this.active)
-  }, 1)
-  
+
+    }, 1)
 
     this.parent.addEventListener('touchstart',this.handleTouchStart, false)
     this.parent.addEventListener('touchmove', this.handleTouchMove, false)
@@ -95,7 +96,7 @@ export default class _touch {
     if (target.nodeName !== "A" || target.nodeName !== "INPUT") {
       let touching = event.touches[0]
       this.reflow()
-      this.scroller.doTouchStart(event.touches, event.timeStamp);
+      this.scroller.doTouchStart(event.touches, event.timeStamp)
       event.preventDefault()
     }
     return false
@@ -105,18 +106,18 @@ export default class _touch {
     let event = window.event || event
     let target = event.target
     if (target.nodeName !== "A" || target.nodeName !== "INPUT") {
-      this.scroller.doTouchMove(event.touches, event.timeStamp);
+      this.scroller.doTouchMove(event.touches, event.timeStamp)
       event.preventDefault()  
     }
     return false
   }
 
   handleTouchEnd () {
+    this.flag = true
     let event = window.event || event
     let target = event.target
       if (target.nodeName !== "A" || target.nodeName !== "INPUT") {
-        this.scroller.doTouchEnd(event.timeStamp);
-        
+        this.scroller.doTouchEnd(event.timeStamp)
         event.preventDefault()
       }
     return false

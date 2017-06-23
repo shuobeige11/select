@@ -2,30 +2,30 @@
   <div class="alert">
      <section class="value" @click="HandleClick1"></section>
      <section :class="'modal' + ( !shows ? ' modal-hide' : '' )">
-     <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
-        <header class="modal-header">
-            <header class="heading">日历选择</header>
-            <span class="close" @click="HandleClick">完成</span>
-        </header>
-        <section class="modal-body">
-            <div class="box" ref="box1">
-              <dl class="modal-body-con" ref="year">
-                  <dd v-for="n of space.year" v-text='!min ? (1980 + n) : (mins.year - 1 + n)'></dd>
-              </dl>
-            </div>
-            <div class="box" ref="box2">
-              <dl class="modal-body-con" ref="month">
-                  <dd v-for="n of space.month" v-text=" month + n"></dd>
-              </dl>
-            </div>
-            <div class="box" ref="box3">
-              <dl class="modal-body-con" ref="day">
-                  <dd v-for="n of space.day" v-text=" day + n "></dd>
-              </dl>
-            </div>
-            <section class="borders"> </section>
+        <section class="modal-mask" ref="mask" :style="'display:' + (!shows ? 'none' : 'block')">
+            <header class="modal-header">
+                <header class="heading">日历选择</header>
+                <span class="close" @click="HandleClick">完成</span>
+            </header>
+            <section class="modal-body">
+                <div class="box" ref="box1">
+                  <dl class="modal-body-con" ref="year">
+                      <dd v-for="n of space.year" v-text='!min ? (1980 + n) : (mins.year - 1 + n)'></dd>
+                  </dl>
+                </div>
+                <div class="box" ref="box2">
+                  <dl class="modal-body-con" ref="month">
+                      <dd v-for="n of space.month" v-text=" month + n"></dd>
+                  </dl>
+                </div>
+                <div class="box" ref="box3">
+                  <dl class="modal-body-con" ref="day">
+                      <dd v-for="n of space.day" v-text=" day + n "></dd>
+                  </dl>
+                </div>
+                <section class="borders"></section>
+            </section>
         </section>
-     </section>
      </section>
   </div>
 </template>
@@ -151,6 +151,10 @@ export default {
     }, false)
   },
   
+  // components: {
+  //   pickerStop
+  // },
+
   methods: {
     init(value) {
        let year,
@@ -239,7 +243,8 @@ export default {
         subElement: 'dd',
         active: 'active',
         pos: this.pos.year,
-        fn: (scroll) => {
+        fn: (scroll, b ) => {
+          b.setAttribute('class', 'active')
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
           let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
           let dd = Math.ceil(this.$refs['day'].querySelector('.active').clientHeight)
@@ -273,7 +278,8 @@ export default {
         subElement: 'dd',
         active: 'active',
         pos: this.pos.month,
-        fn: () => {
+        fn: (scroll, b) => {
+          b.setAttribute('class', 'active')
           let year = Math.ceil(this.$refs['year'].querySelector('.active').innerText)
           let month = Math.ceil(this.$refs['month'].querySelector('.active').innerText)
           let dd = Math.ceil(this.$refs['day'].querySelector('.active').clientHeight)
@@ -299,7 +305,10 @@ export default {
         element: this.dayElement,
         subElement: 'dd',
         active: 'active',
-        pos: this.pos.day
+        pos: this.pos.day,
+        fn: (scroll, b) => {
+          b.setAttribute('class', 'active')
+        }
       })
 
     },
