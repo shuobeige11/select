@@ -115,7 +115,7 @@ export default {
         this.province = this.provs
         this.prov_city = this.citys[this.provs[this.pos.prov].value]
         this.prov_dist = this.dists[this.prov_city[this.pos.city].value]
-
+    
         new _touch({
           parElement: this.provElement1,
           element: this.provElement,
@@ -125,10 +125,8 @@ export default {
           fn: (scroll, b) => {
             b.setAttribute('class', 'active')
             let city = b.getAttribute('data-value')
-          
-              this.cityElement.style['WebkitTransform'] = 'translate3d(0px, 0px, 0) scale(1)'
-              this.distElement.style['WebkitTransform'] = "translate3d(0px, 0px, 0) scale(1)"
-        
+            this.cityElement.style['WebkitTransform'] = 'translate3d(0px, 0px, 0) scale(1)'
+            this.distElement.style['WebkitTransform'] = "translate3d(0px, 0px, 0) scale(1)"
 
             let el1 = this.cityElement.querySelectorAll('dd')
             let el2 = this.distElement.querySelectorAll('dd')
@@ -141,12 +139,14 @@ export default {
             
 
             el1[0].setAttribute('class', 'active')
+           
             el2[0].setAttribute('class', 'active')
 
-            let provCode = city.substr(0,3)
-            let dist = provCode + '100'
+            let dist = el2[0].getAttribute('data-value')
             this.prov_city = this.citys[city]
-            this.prov_dist = this.dists[dist]
+      
+            this.prov_dist = this.dists[this.prov_city[0]['value']]
+          
             this.pos.dist = 0
             this.pos.city = 0
             this.provElement.setAttribute('data-pos', '0')
@@ -183,7 +183,7 @@ export default {
               el2[i].setAttribute('class', '')
             }
 
-            el2[0].setAttribute('class', 'active')
+            el2[0] && el2[0].setAttribute('class', 'active')
 
             this.prov_dist = this.dists[dist]
             this.pos.dist = 0
